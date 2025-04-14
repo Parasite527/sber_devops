@@ -17,12 +17,11 @@ spec:
       - name: log-agent
         image: busybox
         command: [ "sh", "-c", "tail -F /app/logs/app.log" ]
-        # Если вы хотите собирать логи с помощью hostPath, убедитесь, что логи сохраняются на узле.
         volumeMounts:
           - name: logs-volume
             mountPath: /app/logs
       volumes:
         - name: logs-volume
           hostPath:
-            path: /var/log/myapp   # На каждом узле должен быть каталог, куда приложение пишется (если настроить ваше приложение для записи логов в hostPath)
+            path: /var/log/myapp
             type: DirectoryOrCreate
