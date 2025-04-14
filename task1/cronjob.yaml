@@ -19,4 +19,11 @@ spec:
                 curl -s http://custom-app-service/logs -o /tmp/app.log
                 tar -czf /tmp/app-logs-${TIMESTAMP}.tar.gz -C /tmp app.log
                 ls -lh /tmp
+            resources:
+              requests:
+                memory: "64Mi"
+                cpu: "250m"
+              limits:
+                memory: "128Mi"
+                cpu: "500m"
           restartPolicy: OnFailure
