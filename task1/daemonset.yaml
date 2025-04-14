@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: log-agent
+  labels:
+    app: log-agent
+spec:
+  selector:
+    matchLabels:
+      app: log-agent
+  template:
+    metadata:
+      labels:
+        app: log-agent
+    spec:
+      containers:
+      - name: log-agent
+        image: busybox
+        command: [ "sh", "-c", "tail -F /app/logs/app.log" ]
+        # Если вы хотите собирать логи с помощью hostPath, убедитесь, что логи сохраняются на узле.
+        volumeMounts:
+          - name: logs-volume
+            mountPath: /app/logs
+      volumes:
+        - name: logs-volume
+          hostPath:
+            path: /var/log/myapp   # На каждом узле должен быть каталог, куда приложение пишется (если настроить ваше приложение для записи логов в hostPath)
+            type: DirectoryOrCreate

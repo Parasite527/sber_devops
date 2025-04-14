@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-app-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: custom-app
+  template:
+    metadata:
+      labels:
+        app: custom-app
+      annotations:
+        configmap.revision: "{{sha256sum custom-app-config}}"
+    spec:
+      containers:
+      - name: app
+        imagePullPolicy: Never
+        image: custom-app-image
+        ports:
+        - containerPort: 5000
+        envFrom:
+          - configMapRef:
+              name: custom-app-config
+        volumeMounts:
+          - name: logs-volume
+            mountPath: /app/logs
+      volumes:
+        - name: logs-volume
+          emptyDir: {}
